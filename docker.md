@@ -123,11 +123,11 @@ Just run "docker commit <your_container_id> container_name:container_version". S
 $: sudo docker commit 1d44f2426e7e ubuntu-nginx:1.0
 ```
 
-**WOW, can we versionate our container???** Yep, exactly that.
+**WOW, can we versioning our container???** Yep, exactly that.
 
 ## Listing our Docker images
 
-Just run **docker images** and wi'll get:
+Just run "**docker images**" and wi'll get:
 
 ```
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
@@ -137,7 +137,7 @@ ubuntu              14.04               f2d8ce9fa988        2 days ago          
 
 ## Starting our container image
 
-Just run **docker run -i -t -p 8080:80 ubuntu-nginx**:
+Just run "**docker run -i -t -p 8080:80 ubuntu-nginx**":
 
 ```
 $: sudo docker run -i -t -p 8080:80 ubuntu-nginx:1.0 /bin/bash
