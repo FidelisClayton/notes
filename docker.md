@@ -117,7 +117,7 @@ How we can see, now our container is running the bash and nginx. Now type _local
 
 ## Saving our Docker container
 
-Just run "docker commit <your_container_id> container_name:container_version". So:
+Just run "docker commit your_container_id container_name:container_version". So:
 
 ```
 $: sudo docker commit 1d44f2426e7e ubuntu-nginx:1.0
