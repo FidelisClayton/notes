@@ -1,10 +1,10 @@
 ![rails for zombies banner](https://d1ffx7ull4987f.cloudfront.net/images/courses/hero/5/rails-for-zombies-2-44125c4204cb5f67e1feae3e9aa25e39.jpg)
+<img align='right' width="120px" src='https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/25/completed-rails-for-zombies-2-632404d16a1f49d01f5c19105dae07be.png' />
 # Rails for Zombies 2
-<img align='right' src='https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/25/completed-rails-for-zombies-2-632404d16a1f49d01f5c19105dae07be.png' />
 Learn more Rails with this sequel to the infamous Rails for Zombies course. Increase your Ruby on Rails knowledge with even more zombie learning.
 
 ### Chapter 1 - FROM THE GROUND UP
-<img align='right' src='https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/26/level-1-on-rails-for-zombies-2-cfb6d7850ec88fa3917d650740003eb8.png' />
+<img align='right' width="120px" src='https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/26/level-1-on-rails-for-zombies-2-cfb6d7850ec88fa3917d650740003eb8.png' />
 In this chapter, I learned the basics of Ruby on Rails. Things like: create a new app,  start the server, run and rollback migrations, generate a scaffold, generate migrations and create migrations by hand.
 
 #### Notes
