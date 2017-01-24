@@ -3,8 +3,8 @@
 # Rails for Zombies 2
 Learn more Rails with this sequel to the infamous Rails for Zombies course. Increase your Ruby on Rails knowledge with even more zombie learning.
 
-### Chapter 1 - FROM THE GROUND UP
 <img align='right' width="120px" src='https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/26/level-1-on-rails-for-zombies-2-cfb6d7850ec88fa3917d650740003eb8.png' />
+### Chapter 1 - FROM THE GROUND UP
 In this chapter, I learned the basics of Ruby on Rails. Things like: create a new app,  start the server, run and rollback migrations, generate a scaffold, generate migrations and create migrations by hand.
 
 #### Notes
@@ -190,4 +190,77 @@ class Role < ActiveRecord::Base
   has_many :assignments # plural
   has_many :zombies, through: :assignments
 end
+```
+
+<img align='right' src='https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/28/level-3-on-rails-for-zombies-2-0eaaf0109f83459c5aedef30bdf8bd96.png' />
+### Chapter 3 - REST IN PIECES
+
+#### Notes
+
+<img align='right' src='https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/29/level-4-on-rails-for-zombies-2-749b621e3b1d4545acdf0af0b48eb095.png' />
+### Chapter 4 - ASSET PACKAGING AND MAILING
+
+#### Notes
+* To generate a mailer: `rails g mailer ZombieMailer decomp_change lost_brain`. It will generate an mailer `app/mailers/zombie_mailer.rb` and 2 views, `app/views/zombie_mailer/decomp_change.text.erb`, `app/views/zombie_mailer/lost_brain.text.erb`, on for each mailer action.
+* Mailer example: 
+```ruby
+# app/mailers/zombie_mailer.rb
+class ZombieMailer < ActionMailer::Base
+  default from: "from@example.com"
+
+  def decomp_change(zombie)
+    @zombie = zombie
+    @last_tweet = @zombie.tweets.last
+
+    attachments['z.pdf'] = File.read("#{Rails.root}/public/zombie.pdf")
+    mail to: @zombie.email, subject: 'Your decomp stage has changed'
+  end
+  # ...
+end
+```
+
+```erb
+# app/views/zombie_mailer/decomp_change.text.erb
+
+Greetings <%= @zombie.name %>,
+
+    Your decomposition state is now <%= @zombie.decomp %> and your last tweet was: <%= @last_tweet.body %>
+
+Good Luck!
+```
+* If we want to send HTML email, just create another file:
+```erb
+# app/views/zombie_mailer/decomp_change.html.erb
+
+<h1>Greetings <%= zombie.name %>, </h1>
+
+<p> Your decomposition state is now <%= @zombie.decomp %> and your last tweet was: <%= @last_tweet.body %>
+
+<%= link_to "View yourself", zombie_url(@zombie) %>
+```
+* To send the email, we must go to `app/models/zombie.rb` and add an action to send the email:
+```ruby
+class Zombie < ActiveRecord::Base
+  after_save :decomp_change_notification, if: :decomp_changed?
+
+  private
+
+  def decomp_change_notification
+    ZombieMailer.decomp_change(self).deliver
+  end
+```
+* Rails mailer isn't recommended for mass mailing, `Mad Mimi` is a good alternative.
+* to include an asset:
+```erb
+<%= javascript_include_tag "custom" %>
+# Will generate:
+<script src="/assets/custom.js" type="text/javascript"</script>
+
+<%= stylesheet_link_tag "style" %>
+# Will generate:
+<link src="/assets/style.css" media="screen" rel="stylesheet" type="text/css">
+
+<%= image_tag "rails.png" %>
+# Will generate:
+<img alt="Rails" src="/assets/rails.png" />
 ```
