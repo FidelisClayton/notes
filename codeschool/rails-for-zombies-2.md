@@ -371,7 +371,7 @@ def decomp
   end
 end
 ```
-# On JSON response we can set a custom response format for our model, it accept: `include`, `except` and `only`. Example:
+* On JSON response we can set a custom response format for our model, it accept: `include`, `except` and `only`. Example:
 ```ruby
 @zombie.to_json(only: :name) # { "name": "Eric" }
 @zombie.to_json(only: [:name, :age]) # { "name": "Eric", "age": 25 }
