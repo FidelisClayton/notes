@@ -3,9 +3,15 @@
 # Rails for Zombies 2
 Learn more Rails with this sequel to the infamous Rails for Zombies course. Increase your Ruby on Rails knowledge with even more zombie learning.
 
-<img align='right' width="120px" src='https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/26/level-1-on-rails-for-zombies-2-cfb6d7850ec88fa3917d650740003eb8.png' />
+<img align='right' src='https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/26/level-1-on-rails-for-zombies-2-cfb6d7850ec88fa3917d650740003eb8.png' />
 ### Chapter 1 - FROM THE GROUND UP
-In this chapter, I learned the basics of Ruby on Rails. Things like: create a new app,  start the server, run and rollback migrations, generate a scaffold, generate migrations and create migrations by hand.
+- Installing Rails
+- Creating a Rails App
+- The Command Line
+- Database Migrations
+- Ruby 1.9 Hash Syntax
+- Bundler
+- Database Configuration
 
 #### Notes
 * To create a new rails app simply run `rails new MyApp`, where `MyApp`
@@ -76,9 +82,14 @@ end
 * `rake db:setup` will create the database, load the schema and run the seed file.
 * The `seed` file is a file containing some data to be loaded on our database.
 
-<img src="https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/27/level-2-on-rails-for-zombies-2-296b00028b4e97a1beb4917bff1bc1dd.png" width="120px" align="right" />
+<img src="https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/27/level-2-on-rails-for-zombies-2-296b00028b4e97a1beb4917bff1bc1dd.png"  align="right" />
 ### Chapter 2 - MODELS STILL TASTE LIKE CHICKEN
-In this chapter a learned a lot of new things, I learned how to create named scopes, how to relate models, how to add indexes to columns and how to create and use callbacks.
+- Named Scope
+- Callbacks
+- has_one
+- Relationship Options
+- Using Includes
+- has_many :through
 
 #### Notes
 * We can create named scopes to simplify a query. Like this:
@@ -143,12 +154,14 @@ class Brain < ActiveRecord::Base
   belongs_to :zombie
 end
 
-class Zombie < ActiviRecord::Base
+# app/models/zombie.rb
+class Zombie < ActiveRecord::Base
   has_one :brain
 end
 ```
 * We can include the `dependent` option to destroy the child when the father is destroyed:
 ```ruby
+# app/models/zombie.rb
 class Zombie < ActiveRecord::Base
   has_one :brain, dependent: :destroy
 end
@@ -176,16 +189,19 @@ class CreateAssignments < ActiveRecord::Migration
   end
 end
 
+# app/models/assignment.rb
 class Assignment < ActiveRecord::Base
   belongs_to :zombie # singular
   belongs_to :role # singular
 end
 
+# app/models/zombie.rb
 class Zombie < ActiveRecord::Base
   has_many :assignments # plural
   has_many :roles, through: :assignments
 end
 
+# app/models/role.rb
 class Role < ActiveRecord::Base
   has_many :assignments # plural
   has_many :zombies, through: :assignments
@@ -194,15 +210,28 @@ end
 
 <img align='right' src='https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/28/level-3-on-rails-for-zombies-2-0eaaf0109f83459c5aedef30bdf8bd96.png' />
 ### Chapter 3 - REST IN PIECES
+- Understanding REST
+- Revisit URL Helpers
+- Forms & Input Helpers
+- Nested Resources
+- View Partials
+- Other View Helpers
 
 #### Notes
 
 <img align='right' src='https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/29/level-4-on-rails-for-zombies-2-749b621e3b1d4545acdf0af0b48eb095.png' />
 ### Chapter 4 - ASSET PACKAGING AND MAILING
+- Creating and Sending Mail
+- Sending Attachments in Mail
+- The Asset Pipeline
+- Asset Tags
+- CoffeeScript
+- SCSS
+- Javascript Manifest
 
 #### Notes
 * To generate a mailer: `rails g mailer ZombieMailer decomp_change lost_brain`. It will generate an mailer `app/mailers/zombie_mailer.rb` and 2 views, `app/views/zombie_mailer/decomp_change.text.erb`, `app/views/zombie_mailer/lost_brain.text.erb`, on for each mailer action.
-* Mailer example: 
+* Mailer example:
 ```ruby
 # app/mailers/zombie_mailer.rb
 class ZombieMailer < ActionMailer::Base
@@ -212,6 +241,7 @@ class ZombieMailer < ActionMailer::Base
     @zombie = zombie
     @last_tweet = @zombie.tweets.last
 
+    # 'z.pdf' is the filename
     attachments['z.pdf'] = File.read("#{Rails.root}/public/zombie.pdf")
     mail to: @zombie.email, subject: 'Your decomp stage has changed'
   end
@@ -220,7 +250,7 @@ end
 ```
 
 ```erb
-# app/views/zombie_mailer/decomp_change.text.erb
+<!-- app/views/zombie_mailer/decomp_change.text.erb -->
 
 Greetings <%= @zombie.name %>,
 
@@ -230,7 +260,7 @@ Good Luck!
 ```
 * If we want to send HTML email, just create another file:
 ```erb
-# app/views/zombie_mailer/decomp_change.html.erb
+<!-- app/views/zombie_mailer/decomp_change.html.erb -->
 
 <h1>Greetings <%= zombie.name %>, </h1>
 
@@ -240,6 +270,7 @@ Good Luck!
 ```
 * To send the email, we must go to `app/models/zombie.rb` and add an action to send the email:
 ```ruby
+# app/models/zombie.rb
 class Zombie < ActiveRecord::Base
   after_save :decomp_change_notification, if: :decomp_changed?
 
@@ -248,19 +279,138 @@ class Zombie < ActiveRecord::Base
   def decomp_change_notification
     ZombieMailer.decomp_change(self).deliver
   end
+end
 ```
 * Rails mailer isn't recommended for mass mailing, `Mad Mimi` is a good alternative.
 * to include an asset:
 ```erb
 <%= javascript_include_tag "custom" %>
-# Will generate:
+<!-- Will generate: -->
 <script src="/assets/custom.js" type="text/javascript"</script>
 
 <%= stylesheet_link_tag "style" %>
-# Will generate:
+<!-- Will generate: -->
 <link src="/assets/style.css" media="screen" rel="stylesheet" type="text/css">
 
 <%= image_tag "rails.png" %>
-# Will generate:
+<!-- Will generate: -->
 <img alt="Rails" src="/assets/rails.png" />
+```
+
+<img align='right' src='https://d1ffx7ull4987f.cloudfront.net/images/achievements/large_badge/453/level-5-on-rails-for-zombies-2-c2025563150aafdc5e5580d0101eb4aa.png' />
+### Chapter 5 - RENDERING EXTREMITIES
+In this chapter we gonna be taking look on:
+- Controller Rendering Options
+- Custom RESTful Routes
+- Rendering Custom JSON
+- Creating AJAX Links
+- AJAXifiede Forms
+- Sending Server Javascript
+- AJAX using JSON Data
+
+#### Notes
+* How to respond to JSON:
+```ruby
+# app/controllers/zombies_controller.rb
+
+class ZombiesController < ApplicationController
+  def show
+    @zombie = Zombie.find(params[:id])
+    respond_to do |format|
+      format.html
+      format.json { render json: @zombie }
+    end
+  end
+end
+```
+* If we just need JSON:
+```ruby
+# app/controllers/zombies_controller.rb
+# ...
+
+def show
+  @zombie = Zombie.find(params[:id])
+  render json: @zombie
+end
+
+# ...
+```
+* Status `200 - OK` is the default status on rails, to set another code:
+```ruby
+render json: @zombie.errors, status: :unprocessable_entity
+
+render json: @zombie, status: :created, location: @zombie
+```
+* We have 2 types of custom routes, `:member` and `:collection`. `:member` acts on a single resource, while `:collection` acts on a collection of resources. Examples:
+```ruby
+resources :zombies do
+  # url: /zombies/:id/decomp | helper: decomp_zombie_path(@zombie)
+  get :decomp, on: :member
+
+  # url: /zombies/:id/decay  | helper: decay_zombie_path(@zombie)
+  get :decay, on: :member
+
+  # url: /zombies/fresh      | helper: fresh_zombies_path
+  get :fresh, on: :collection
+
+  # url: /zombies/search     | helper: search_zombies_path
+  post :search, on: :collection
+end
+```
+```ruby
+# app/controllers/zombies_controller.rb
+# ...
+
+def decomp
+  @zombie = Zombie.find(params[:id])
+
+  if @zombie.decomp === 'Dead (again)'
+    render json: @zombie, status: unprocessable_entity
+  else
+    render json: @zombie, status: :ok
+  end
+end
+```
+# On JSON response we can set a custom response format for our model, it accept: `include`, `except` and `only`. Example:
+```ruby
+@zombie.to_json(only: :name) # { "name": "Eric" }
+@zombie.to_json(only: [:name, :age]) # { "name": "Eric", "age": 25 }
+
+@zombie.to_json(except: [:created_at, :updated_at, :id, :email, :bio]) # { "age": 25, "decomp": "Fresh", "name": "Eric", "rotting": false }
+
+@zombie.to_json(include: :brain)
+```
+* We can set a default response:
+```ruby
+# /app/models/zombie.rb
+# ...
+
+def as_json(options = nil)
+  super(options || { include: :brain, except: [:created_at, :updated_at, :id] })
+end
+```
+* To make an ajax request we just need add `remote: true`, see below:
+```ruby
+<%= link_to 'delete', zombie, method: :delete, remote: true %>
+```
+* After this we need to allow the controller to accept the Javascript call:
+```ruby
+# app/controllers/zombies_controller.rb
+# ...
+
+def destroy
+  # ...
+
+  respond_to do |format|
+    format.html { redirect_to zombies_url }
+    format.json { head: ok }
+    format.js # add this one
+  end
+end
+```
+* After this we need to write the Javascript to send back to the client
+```erb
+# app/views/zombies/destroy.js.erb
+
+$('#<%= dom_id(@zombie) %>').fadeOut();
 ```
